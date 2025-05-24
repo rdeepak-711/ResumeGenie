@@ -1,71 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import datetime
 from typing import Optional
 
-from models import ResumeEntry, ResumeRequest, UserCreate, Token, User, CheckoutRequest
+from models import ResumeEntry, ResumeRequest, User, CheckoutRequest
 from db import get_resume_collection, get_user_collection
-from utils.auth import addNewUser, checkUser
-from utils.resumeHelper import score_resume_with_openai, clean_input_text, is_free_usage
 from utils.dependencies import get_current_user
 from utils.paymentHelper import create_checkout_session
 
+from endpoints.auth_routes import router as auth_router
+from endpoints.credit_routes import router as credit_router
+
 router = APIRouter()
 
-# User Signup
-@router.post("/auth/signup")
-async def signup(user: UserCreate):
-    try:
-        response = await addNewUser(user=user)
-        if not response["success"]:
-            raise Exception(response["message"])
-        return {
-            "success": True,
-            "message": "User created successfully"
-        }
-    except Exception as e:
-        return {
-            "success": False,
-            "message": str(e)
-        }
-
-# User Login
-@router.post("/auth/login", response_model=Token)
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    try:
-        response = await checkUser(form_data.username, form_data.password)
-        if not response["success"]:
-            raise Exception(response["message"])
-        return {
-            "access_token": response["accessToken"],
-            "token_type": response["tokenType"],
-            "email": response["email"],
-            "credits": response["credits"]
-        }
-    except Exception as e:
-        return {
-            "success": False,
-            "message": str(e)
-        }
-    
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-
-@router.post("/auth/logout")
-async def logout(token: str = Depends(oauth2_scheme)):
-    return {
-        "success": True, 
-        "message": "Logged out successfully"
-    }
-
-@router.get("/auth/profile")
-async def get_current_user_data(current_user: dict = Depends(get_current_user)):
-    return {
-        "success": True,
-        "email": current_user.email,
-        "credits": current_user.credits,
-        "created_at": current_user.created_at
-    }
-
+router.include_router(auth_router)
+router.include_router(credit_router)
 
 # POST request to analyze the resume
 @router.post("/analyze")
@@ -158,3 +106,4 @@ async def create_checkout(request: CheckoutRequest, current_user: dict = Depends
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unexpected server error: " + str(e)
         )
+    
