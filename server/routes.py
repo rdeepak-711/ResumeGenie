@@ -2,10 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from datetime import datetime
 from typing import Optional
 
-from models import ResumeEntry, ResumeRequest, User, CheckoutRequest
+from models import ResumeEntry, ResumeRequest, User
 from db import get_resume_collection, get_user_collection
 from utils.dependencies import get_current_user
-from utils.paymentHelper import create_checkout_session
 
 from endpoints.auth_routes import router as auth_router
 from endpoints.credit_routes import router as credit_router
@@ -78,32 +77,4 @@ async def analyzeResume(resume_request: ResumeRequest, current_user: Optional[Us
             "success": False,
             "message": str(e)
         }
-    
-@router.post("/create-checkout-session")
-async def create_checkout(request: CheckoutRequest, current_user: dict = Depends(get_current_user)):
-    try:
-        result = await create_checkout_session(
-            user_email=current_user.email,
-            plan_type=request.plan_type,
-            custom_credits=request.custom_credits
-        )
-
-        if result["success"]:
-            return {"url": result["message"]}
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=result["message"]
-            )
-    except ValueError as ve:
-         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=str(ve)
-        )
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Unexpected server error: " + str(e)
-        )
     
