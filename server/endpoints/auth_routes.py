@@ -36,7 +36,7 @@ async def signup(user: UserCreate):
         }
 
 # User Login
-@router.post("/auth/login", response_model=Token)
+@router.post("/login", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     try:
         response = await checkUser(form_data.username, form_data.password)
@@ -57,14 +57,14 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 #Logout endpoint
-@router.post("/auth/logout")
+@router.post("/logout")
 async def logout(token: str = Depends(oauth2_scheme)):
     return {
         "success": True, 
         "message": "Logged out successfully"
     }
 
-@router.get("/auth/profile")
+@router.get("/profile")
 async def get_current_user_data(current_user: dict = Depends(get_current_user)):
     return {
         "success": True,
@@ -73,7 +73,7 @@ async def get_current_user_data(current_user: dict = Depends(get_current_user)):
         "created_at": current_user.created_at
     }
 
-@router.put("/auth/profile")
+@router.put("/profile")
 async def update_user(updates: UserCreate, current_user: User = Depends(get_current_user)):
     try:
         userCollection = await get_user_collection()

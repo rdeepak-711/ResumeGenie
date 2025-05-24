@@ -1,8 +1,12 @@
-from fastapi import APIRouter, status, Depends, HTTPException
+import stripe
+
+from fastapi import APIRouter, status, Depends, HTTPException, Request
 
 from utils.paymentHelper import PRESET_PLANS, CUSTOM_CREDIT_PRICE, create_checkout_session
 from utils.dependencies import get_current_user
 from models import CheckoutRequest
+from config import STRIPE_WEBHOOK_SECRET
+from db import get_user_collection
 
 router = APIRouter(prefix="/credits", tags=["Credits"])
 
@@ -56,4 +60,29 @@ async def create_checkout(request: CheckoutRequest, current_user: dict = Depends
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unexpected server error: " + str(e)
+        )
+    
+@router.post("/webhook")
+async def stripe_webhook(request: Request):
+    payload = await request.body()
+    stripeSignatureHeader = request.headers.get("stripe-signature")
+
+    try:
+        event = stripe.Webhook.contruct_event(
+            payload,
+            stripeSignatureHeader,
+            STRIPE_WEBHOOK_SECRET
+        )
+    except stripe.error.SignatureVerificationError:
+        raise HTTPException(status_code=400, detail="Invalid signature")
+    
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        email = session["metadata"]["email"]
+        credits = int(session["metadata"]["credits"])
+
+        userCollection = await get_user_collection()
+        await userCollection.update_one(
+            {"email": email},
+            {"$inc": {"credits": credits}}
         )
