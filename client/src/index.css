@@ -1,19 +1,30 @@
 @import "tailwindcss";
 
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
+body {
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
 }
 
-.animate-blink {
-  animation: blink 1s step-start infinite;
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+html {
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
 }
 
 body {
   overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }

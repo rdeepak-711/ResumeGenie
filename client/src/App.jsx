@@ -1,20 +1,15 @@
-import { useRef } from "react";
-
 import Hero from "./components/Hero";
 import UploadSection from "./components/UploadSection";
 
 export default function App() {
-  const uploadRef = useRef(null);
-
-  const handleScroll = () => {
-    uploadRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
   return (
-    <>
-      <Hero onScrollClick={handleScroll} />
-      <div ref={uploadRef}>
+    <main className="h-screen w-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory">
+      <section className="snap-start h-screen">
+        <Hero />
+      </section>
+      <section className="snap-start h-screen">
         <UploadSection />
-      </div>
-    </>
+      </section>
+    </main>
   );
 }
