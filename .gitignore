@@ -1,0 +1,27 @@
+# Python cache files
+server/__pycache__/
+server/utils/__pycache__/
+
+# Python virtual environment
+server/venv/
+
+# Environment variables
+server/.env
+
+# Compiled bytecode
+*.pyc
+*.pyo
+
+# Ignore init files if you don't need them
+server/__init__.py
+server/utils/__init__.py
+
+# Custom folders
+server/manual_text/
+
+# Node modules if any
+client/node_modules/
+
+# OS junk files
+.DS_Store
+Thumbs.db

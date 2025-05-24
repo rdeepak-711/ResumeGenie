@@ -1,0 +1,33 @@
+Deepak R
+Software Developer with 1+ years of experience creating full-stack web solutions. Skilled in Python, FastAPI, ReactJS, and system design. Proven track record of shipping maintainable, scalable features and working cross-functionally with teams to deliver real-world impact. Motivated to contribute to engineering teams building efficient, AI-driven systems.
+
+Skills
+Languages & Databases
+Python, JavaScript, C++, Java, MySQL, MongoDB, SQL
+Web & API Development
+ReactJS, FastAPI, REST APIs, HTML, CSS, JavaScript, TailwindCSS
+Cloud & Deployment
+Docker, Netlify, Render, Git, Component-Based Architecture
+
+Experience
+UiPath
+Aug 2023 – Nov 2024
+Associate RPA Developer
+Developed and automated 6+ high-volume business workflows in UiPath, eliminating 200+ hours/month of manual work. Configured AI-driven email classification using Communications Mining, reaching 85%+ tagging accuracy. Created CV-based bots for legacy desktop apps, increasing automation coverage by 30%.
+
+Cadra
+Oct 2021 – Nov 2021
+Front end developer
+Led the UI development of a ReactJS dashboard used by 100+ educators for sending classroom alerts. Facilitated weekly meetings with cross-functional stakeholders to identify and resolve performance bottlenecks, identified and resolved the top 3 crash causes, improving delivery speed by 20%.
+
+Education
+Coimbatore Institute of Technology
+B.E. Computer Science and Engineering
+GPA: 8.5
+
+Projects
+Personal Notes
+Engineered a secure, full-stack note-taking app with user authentication, CRUD, archive, and delete features. Optimized FastAPI routes and implemented MongoDB indexing to reduce backend latency by 30%. Modularized React components and abstracted API logic for clean architecture and future scalability. Dockerized MongoDB for consistent local development and smoother deployment pipelines.
+
+Current Weather
+Built a real-time weather app serving 300+ unique users using OpenWeather API. Introduced dynamic backgrounds and visuals based on weather data, reducing bounce rate by 20%.

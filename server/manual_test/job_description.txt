@@ -1,0 +1,40 @@
+About Zeta
+
+Zeta is a Next-Gen Banking Tech company that empowers banks and fintechs to launch banking products for the future. It was founded by Bhavin Turakhia and Ramki Gaddipati in 2015.
+
+Our flagship processing platform - Zeta Tachyon - is the industry’s first modern, cloud-native, and fully API-enabled stack that brings together issuance, processing, lending, core banking, fraud & risk, and many more capabilities as a single-vendor stack. 20M+ cards have been issued on our platform globally.
+
+Zeta is actively working with the largest Banks and Fintechs in multiple global markets transforming customer experience for multi-million card portfolios.
+
+Zeta has over 1700+ employees - with over 70% roles in R&D - across locations in the US, EMEA, and Asia. We raised $280 million at a $1.5 billion valuation from Softbank, Mastercard, and other investors in 2021.
+
+Learn more @ www.zeta.tech, careers.zeta.tech, Linkedin, Twitter
+
+About the Role
+Looking for a creative coding enthusiast, Imagine a role where your passion for programming and design collide to shape captivating user experiences across platforms. Welcome to Zeta, where innovation meets creativity, and we're seeking a Frontend Developer to be the driving force behind our digital dreams.
+
+Responsibilities
+Coding and Development: Write, test, and maintain high-quality code following best practices and coding standards.
+Version Control: Use version control systems (e.g., Git) to manage and track changes to the codebase.
+Agile Development: Work within an agile development environment, participating in sprint planning, daily stand-ups, and retrospectives.
+Problem Solving: Analyze and solve technical problems independently or with minimal guidance.
+Code Optimization: Learn and apply techniques for optimizing code for performance and efficiency.
+Skills
+Programming Languages: Experience in at least one backend programming language such as Java, Python, Ruby, Node.js, or C# and an understanding of language-specific frameworks and libraries.
+Web Development Basics: Knowledge HTML, CSS, and JavaScript and Understanding of web development concepts and technologies.
+Database Management: Knowledge of relational databases (e.g., MySQL, PostgreSQL) and non-relational databases (e.g., MongoDB)
+APIs: (Application Programming Interfaces): Understanding of RESTful and/or GraphQL APIs.
+Server-Side Development: Understanding of server-side development concepts.
+Frameworks and Libraries: Knowledge with backend frameworks such as Django (Python), Spring (Java), Express (Node.js), or Flask (Python).Knowledge of relevant libraries and tools within the chosen framework.
+Data Structures and Algorithms: Understanding of fundamental data structures and algorithms. Ability to apply algorithms to solve real-world problems efficiently.
+Testing: Experience with writing unit tests for backend code. Knowledge of testing frameworks and methodologies.
+Experience and Qualifications
+Bachelor’s/Master’s degree in engineering with 1 year of experience
+Passion for Programming.
+Strong understanding of data structures and algorithms.
+Aware of various product design, functional design and usability factors in designing.
+Experience with Linux as a working environment for development and deployment
+Exposure to SOAP or XML-RPC or any other remoting or service oriented application technology
+Equal Opportunity
+
+Zeta is an equal opportunity employer. We celebrate diversity and are committed to creating an inclusive environment for all employees. We encourage applicants from all backgrounds, cultures, and communities to apply and believe that a diverse workforce is key to our success
