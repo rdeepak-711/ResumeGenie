@@ -18,6 +18,10 @@ async def score_resume_with_openai(resume_text: str, job_description: str) -> di
     try:
         messages = [
             {
+                "role": "system",
+                "content": "You are a resume analysis AI. You must only respond with JSON as instructed. No explanations."
+            },
+            {
                 "role": "user",
                 "content": f"""
                     You will receive:

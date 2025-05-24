@@ -9,6 +9,7 @@ class ResumeRequest(BaseModel):
 
 # Full Entry
 class ResumeEntry(ResumeRequest):
+    user_email: str
     score: Optional[float]
     feedback: Optional[str]
     created_at: datetime
