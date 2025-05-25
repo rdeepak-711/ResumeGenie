@@ -29,8 +29,8 @@ function UploadSection() {
   };
 
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center relative text-center px-6 bg-gradient-to-br from-gray-900 to-black text-white">
-      <div className="bg-white/10 backdrop-blur-xl shadow-lg p-8 rounded-3xl w-full max-w-5xl">
+    <section className="min-h-screen flex flex-col justify-start items-center text-center px-4 py-12 bg-gradient-to-br from-gray-900 to-black text-white">
+      <div className="bg-white/10 backdrop-blur-lg shadow-2xl p6 sm:p-10 rounded-3xl w-full max-w-5xl">
         <h2 className="text-4xl font-extrabold text-center text-slate-300 mb-8 drop-shadow-md">
           Try Resume Genie
         </h2>
@@ -124,10 +124,10 @@ function UploadSection() {
       </div>
 
       {/* Submit Button */}
-      <div className="mt-10 text-center">
+      <div className="mt-10 mb-6">
         <button
           onClick={handleSubmit}
-          className="bg-gradient-to-r from-indigo-700 to-slate-700 text-white px-10 py-3 rounded-full hover:scale-105 transition-transform duration-300 font-semibold shadow-xl drop-shadow-lg select-none"
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-full hover:scale-105 transition-transform font-semibold shadow-xl"
           style={{ willChange: "transform" }}
         >
           Analyze with AI ✨

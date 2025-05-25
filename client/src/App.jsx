@@ -7,9 +7,10 @@ export default function App() {
       <section className="snap-start h-screen">
         <Hero />
       </section>
-      <section className="snap-start h-screen">
+      <section className="snap-start min-h-screen">
         <UploadSection />
       </section>
+      <section className="snap-start min-h-[40vh]"></section>
     </main>
   );
 }
