@@ -7,6 +7,7 @@ server/venv/
 
 # Environment variables
 server/.env
+client/.env
 
 # Compiled bytecode
 *.pyc

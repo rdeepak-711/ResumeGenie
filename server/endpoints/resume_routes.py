@@ -6,7 +6,7 @@ from bson import ObjectId
 from models import ResumeRequest, User, ResumeEntry
 from db import get_user_collection, get_resume_collection
 from utils.dependencies import get_current_user
-from utils.resumeHelper import clean_input_text, is_free_usage, score_resume_with_openai
+from utils.resumeHelper import score_resume_with_claude, clean_input_text, is_free_usage, validate_text_limits, FREE_TIER_LIMITS, PAID_TIER_LIMITS
 
 router = APIRouter(prefix="/resume", tags=["Resume"])
 
@@ -24,15 +24,32 @@ async def analyzeResume(
             raise HTTPException(status_code = 400, detail = "Resume and Job Description cannot be empty")
 
         needsCredit = not is_free_usage(resumeText, jobDescription)
+        is_paid_user = current_user is not None
 
+        validate_text_limits(resumeText, jobDescription, is_paid_user)
         if needsCredit:
             if not current_user:
-                raise HTTPException(status_code=401, detail="Login required for longer resumes")
+                raise HTTPException(
+                    status_code=401, 
+                    detail={
+                        "message": "Login required for content exceeding free tier limits",
+                        "limits": FREE_TIER_LIMITS,
+                        "current": {
+                            "resume_chars": len(resumeText),
+                            "jd_chars": len(jobDescription),
+                            "total_chars": len(resumeText) + len(jobDescription)
+                        }
+                    }
+                )
 
             if current_user.credits<1:
                 raise HTTPException(
                     status_code=status.HTTP_402_PAYMENT_REQUIRED,
-                    detail="Not enough credits. Please buy more to proceed."
+                    detail={
+                        "message": "Insufficient credits. Please purchase more to continue.",
+                        "current_credits": current_user.credits,
+                        "required_credits": 1
+                    }
                 )
             userCollection = await get_user_collection()
             result = await userCollection.update_one(
@@ -45,10 +62,20 @@ async def analyzeResume(
                     detail = "Credit deduction failed. Please try again"
                 )
 
-        response = await score_resume_with_openai(resumeText, jobDescription)
+        response = await score_resume_with_claude(resumeText, jobDescription)
 
         if not response.get("success"):
-            raise HTTPException(status_code=400, detail=response.get("message", "OpenAI error"))
+            if needsCredit and current_user:
+                userCollection = await get_user_collection()
+                await userCollection.update_one(
+                    {"email": current_user.email},
+                    {"$inc": {"credits": 1}}
+                )
+            
+            raise HTTPException(
+                status_code=400, 
+                detail=response.get("message", "Resume analysis failed")
+            )
  
         if current_user:
             resumeEntry = ResumeEntry(
@@ -66,6 +93,12 @@ async def analyzeResume(
         else:
             saveMsg = "Entry generated but not saved (user not logged in)"
 
+        updated_credits = None
+        if current_user:
+            userCollection = await get_user_collection()
+            updated_user = await userCollection.find_one({"email": current_user.email})
+            updated_credits = updated_user.get("credits", 0) if updated_user else 0
+
         return {
             "success": True,
             "message": saveMsg,
@@ -73,9 +106,14 @@ async def analyzeResume(
                 "score": response["score"],
                 "feedback": response["feedback"],
                 "tailored_resume": response["tailored_resume"],
-                "remaining_credits": current_user.credits if current_user else None
+                "remaining_credits": updated_credits,
+                "credits_used": 1 if needsCredit else 0,
+                "tier_used": "paid" if needsCredit else "free"
             }
         }
+
+    except HTTPException:
+        raise 
 
     except Exception as e:
         return {
@@ -144,4 +182,68 @@ async def get_resume_entry(id: str, current_user: User = Depends(get_current_use
         return {
             "success": False,
             "message": str(e)
+        }
+    
+@router.get("/limits")
+async def get_usage_limits(current_user: Optional[User] = Depends(get_current_user)):
+    """Get character limits for current user"""
+    is_paid_user = current_user is not None
+    limits = PAID_TIER_LIMITS if is_paid_user else FREE_TIER_LIMITS
+    
+    return {
+        "success": True,
+        "data": {
+            "limits": limits,
+            "tier": "paid" if is_paid_user else "free",
+            "current_credits": current_user.credits if current_user else 0
+        }
+    }
+
+@router.post("/check-limits")
+async def check_content_limits(
+    resume_text: str,
+    job_description: str,
+    current_user: Optional[User] = Depends(get_current_user)
+):
+    """Check if content fits within user's limits"""
+    try:
+        resume_text = clean_input_text(resume_text)
+        job_description = clean_input_text(job_description)
+        
+        is_paid_user = current_user is not None
+        is_free = is_free_usage(resume_text, job_description)
+        
+        resume_chars = len(resume_text)
+        jd_chars = len(job_description)
+        total_chars = resume_chars + jd_chars
+        
+        limits = PAID_TIER_LIMITS if is_paid_user else FREE_TIER_LIMITS
+        
+        return {
+            "success": True,
+            "data": {
+                "within_limits": True,
+                "is_free_tier": is_free,
+                "credits_required": 0 if is_free else 1,
+                "current": {
+                    "resume_chars": resume_chars,
+                    "jd_chars": jd_chars,
+                    "total_chars": total_chars
+                },
+                "limits": limits,
+                "tier": "paid" if is_paid_user else "free"
+            }
+        }
+        
+    except HTTPException as e:
+        return {
+            "success": False,
+            "message": e.detail,
+            "within_limits": False
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error checking limits: {str(e)}",
+            "within_limits": False
         }
